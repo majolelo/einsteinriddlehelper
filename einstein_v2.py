@@ -1,129 +1,9 @@
-import os, sys, pyperclip
+import os, sys, pyperclip, einstein_rules
 from rich import print
 from rich.console import Console
 
 lenpersons = 9
-attributes = [
-    'vehicles',
-    'food',
-    'tools',
-    'socmed',
-    'sports',
-    'games',
-    'meds',
-    'names',
-    'pets',
-    'drinks',
-    'national'
-]
-objects = {
-    'vehicles':['car','truck','tank','bike','train','zeppelin','helicopter','submarine','ambulance'],
-    'food':['banana','cheese','cherry','corn','mushroom','pasta','pineapple','steak','tomato'],
-    'tools':['wheelbarrow','handsaw','chainsaw','clamp','drill','tablesaw','shovel','wrench','hammer'],
-    'socmed':['skype','facebook','youtube','ebay','linkedin','instagram','google','pinterest','twitter'],
-    'sports':['volleyball','ballet','basketball','soccer','baseball','hockey','boxing','bowling','rugby'],
-    'games':['computer','headphone','handheld','mouse','joystick','drivingwheel','wii','xbox','playstation'],
-    'meds':['bloodbag','pressure','bandagecross','thermometer','syringe','scalpel','microscope','pill','orthopedic'],
-    'names':['R','F','W','M','J','L','S','C','P'],
-    'pets':['rabbit','rat','lion','panda','fox','frog','elephant','cat','dog'],
-    'drinks':['coffee','lemonade','milkshake','nonalcohol','water','milk','coke','energydrink','watermelon'],
-    'national':['british','german','america','french','japan','korea','italy','swede','russia']
 
-    #'hats':['feather','cowboy','baseballcap','helmet','santa','wizard','detective','crown','graduation'],
-    #'weather':['sun','rain','thunder','cloud','eclipse','snow','night','sunrise','tornado'],
-    #'occupation':['engineer','doctor','scientist','photographer','teacher','police','painter','pilot','dentist'],
-    #'costume':['sultan', 'devil','judge','queen','sombrero','superman','unclesam','king','angel'],
-    #'money':['C1','C5','C10','C25','USD1','USD5','USD10','USD20','USD50'],
-    #'music':['violin','trumpet','tambourine','xylophone','flute','saxophone','keyboard','harp','guitar'],
-}
-rules = [
-    ['hockey','korea','steak','ebay','coffee',],
-    ['wheelbarrow','youtube',],
-    ['W','italy','zeppelin',],
-    ['handheld','P',],
-    ['bloodbag','watermelon','pineapple','joystick','volleyball',],
-    ['linkedin','rugby','america',],
-    ['bike','british',],
-    ['playstation','cat','J','soccer',],
-    ['headphone','pill','coke','baseball',],
-    ['mushroom','M',],
-    ['car','orthopedic','rat',],
-    ['wii','milk','bowling',],
-    ['pasta','microscope',],
-    ['truck','basketball',],
-    ['chainsaw','panda',],
-    ['submarine','energydrink',],
-    ['skype','rabbit','ambulance',],
-    ['boxing','fox',],
-    ['corn','R',],
-    ['tank','japan',],
-    ['drivingwheel','lemonade','shovel','L','dog',],
-    ['tomato','syringe','hammer',],
-    ['handsaw','bandagecross',],
-    ['google','thermometer','nonalcohol',],
-    ['computer','C',],
-    ['twitter','F',],
-]
-rulesnegative = [
-    ['P','french',],
-    ['elephant','japan',],
-    ['thermometer','italy',],
-    ['wrench','french',],
-    ['joystick','W',],
-    ['dog','america',],
-    ['wrench','russia',],
-    ['clamp','coffee',],
-    ['energydrink','russia',],
-    ['thermometer','german',],
-    ['orthopedic','coffee',],
-    ['panda','milkshake',],
-    ['elephant','korea',],
-    ['panda','italy',],
-    ['wrench','lion',],
-    ['tank','lion',],
-    ['facebook','pill',],
-    ['youtube','headphone',],
-    ['computer','scalpel',],
-    ['P','russia',],
-    ['R','energydrink',],
-    ['banana','J',],
-    ['instagram','soccer',],
-    ['wrench','nonalcohol',],
-    ['pill','F',],
-    ['mouse','fox',],
-    ['wheelbarrow','energydrink',],
-    ['handsaw','facebook',],
-    ['google','fox',],
-    ['wii','F',],
-    ['chainsaw','computer',],
-    ['google','panda',],
-    ['twitter','bloodbag',],
-    ['M','nonalcohol',],
-    ['orthopedic','russia',],
-    ['tank','xbox',],
-    ['cherry','playstation',],
-    ['wii','italy',],
-    ['youtube','S',],
-    ['rat','french',],
-    ['clamp','playstation',],
-    ['drill','playstation',],
-    ['R','water',],
-    ['clamp','russia',],
-    ['R','nonalcohol',],
-    ['playstation','syringe',],
-    ['M','energydrink',],
-    ['google','cat',],
-    ['R','german',],
-    ['twitter','japan',],
-    ['drivingwheel','russia',],
-    ['helicopter','rugby',],
-    ['cherry','W',],
-    ['milkshake','korea',],
-    ['dog','french',],
-    ['syringe','energydrink',],
-    ['drill','watermelon',],
-    ['P','korea',],
-]
 
 def getattitem(myitem):
     for object in objects:
@@ -186,6 +66,7 @@ def printposs(possibilities, possobject, tposs):
         #temp=[]
         if not objects.get(att) is None:
             possobject = objects[att].copy()
+            oke2skip = False
             for i, place in enumerate(placeholder):
                 if i==col:
                     continue
@@ -209,6 +90,7 @@ def printposs(possibilities, possobject, tposs):
                 print(' 🟡 ', end='')
             else:
                 print(' ⚪️ ', end='')
+                oke2skip = True
             checknegativewithin(col, possobject, att)
             if(len(possobject)==1):
                 print(' 🛑 ', end='')
@@ -216,6 +98,9 @@ def printposs(possibilities, possobject, tposs):
                 print(' 🟡 ', end='')
             else:
                 print(' ⚪️ ', end='')
+                oke2skip
+            if oke2skip:
+                tposs.clear()
             tposs.append(possobject)
     except:
         pass
@@ -298,8 +183,15 @@ def fillallup():
             att = getattitem(item)
             if(att == None):
                 print(item + ' [#ff0000]Whatt?![/#ff0000]')
+                input('')
             myatt[att] = item
         placeholder.append(myatt)
+    for rulepair1, rulepair2 in rulesnegative:
+        myatt = {}
+        att = getattitem(rulepair1)
+        if att == None:
+            print(rulepair1 + '[#ff0000]What?![/#ff0000]')
+            input('')
 
 def movenormal(tfrom, tto):
     if safetomove(tfrom, tto):
@@ -325,6 +217,10 @@ def manualinput(manual, item, mycol):
         global error
         error=('[red]Not allowed![/red]')
 
+attributes = einstein_rules.attributes
+objects = einstein_rules.objects
+rules = einstein_rules.rules
+rulesnegative = einstein_rules.rulesnegative
 os.system('cls')
 console = Console()
 
