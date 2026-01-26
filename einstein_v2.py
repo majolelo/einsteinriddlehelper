@@ -58,7 +58,28 @@ def checkatt(col, att, attvalue):
             att1 = getattitem(rulepair[0])
             att2 = getattitem(rulepair[1])
 
+def possrow(att):
+    global tposs, repeatme, highlight, colhighlight
+    for i, place in enumerate(placeholder):
+        value = place.get(att)
+        print(f' {i} ', end='')
+        if value is None:
+            temp = str(i)+','+att
+            printposs(temp, possobject, tposs)
+        else:
+            print(value, end='')
+            if repeatme:
+                printrules(highlight, colhighlight)
+                repeatme = False
+                possrow(att)
+                #print(att)
+                #input()
+            #input('')
+        print(tposs)
+        tposs=[]
+
 def printposs(possibilities, possobject, tposs):
+    global repeatme
     try:
         scol,att = possibilities.split(',')
         col=int(scol)
@@ -86,6 +107,11 @@ def printposs(possibilities, possobject, tposs):
                         possobject.remove(value)
             if (len(tposs)==1):
                 print(' 🛑 ', end='')
+                if tposs[0][0] > tposs[0][1]:
+                    movenormal(tposs[0][0], tposs[0][1])
+                else:
+                    movenormal(tposs[0][1], tposs[0][0])
+                repeatme = True
             elif(len(tposs)<3):
                 print(' 🟡 ', end='')
             else:
@@ -229,7 +255,10 @@ placeholder = []
 fillallup()
 
 if(len(sys.argv)>1):
-    x='auto'
+    if(sys.argv[1]=='resolve'):
+        x = 'resolve'
+    else:
+        x='auto'
 else:
     x=''
 highlight=-1
@@ -238,6 +267,7 @@ tposs = []
 possobject=[]
 history=[]
 runonce=1
+repeatme = False
 while(x != 'x'):
     error=''
     if(x!=''):
@@ -306,6 +336,8 @@ while(x != 'x'):
             printposs(possibilities, possobject, tposs)
         elif(x=='pr'):
             att = input('Which attribute? ')
+            possrow(att)
+            """
             for i, place in enumerate(placeholder):
                 value = place.get(att)
                 print(f' {i} ', end='')
@@ -316,6 +348,7 @@ while(x != 'x'):
                     print(value, end='')
                 print(tposs)
                 tposs=[]
+            """
             temp = input('Press enter to continue or to input, start with 0 or i (0 for moving, i for input)...')
             if temp.startswith('0'):
                 try:
@@ -332,6 +365,9 @@ while(x != 'x'):
                     manualinput(toinput[1], toinput[2], int(toinput[3]))
                 except:
                     error = f'[red]Invalid input![/red]'
+        elif(x=='resolve'):
+            for attribute in attributes:
+                possrow(attribute)
         elif(x=='n'):
             negative = input('What to check negative? (att) ')
             for rulepair in rulesnegative:
