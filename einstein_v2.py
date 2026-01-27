@@ -366,8 +366,19 @@ while(x != 'x'):
                 except:
                     error = f'[red]Invalid input![/red]'
         elif(x=='resolve'):
-            for attribute in attributes:
-                possrow(attribute)
+            print('[red]WARNING[/red]: This could spoil the game, since it will try to completely solve the puzzle. [#ffff00]Another warning[/#ffff00]: the program could loop indefinitely. In such case, press Ctrl + C to force quit. Continue (y to continue)?  ', end='')
+            confirmme = input('')
+            counter = 0
+            if confirmme == 'y':
+                while len(placeholder) != lenpersons:
+                    if counter == 3:
+                        print('The program has been in loop for 3 times. Still want to continue? (y to continue) ', end='')
+                        confirmm2 = input()
+                        if confirmm2 != '':
+                            break
+                    counter += 1
+                    for attribute in attributes:
+                        possrow(attribute)
         elif(x=='n'):
             negative = input('What to check negative? (att) ')
             for rulepair in rulesnegative:
